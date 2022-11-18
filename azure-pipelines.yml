@@ -1,0 +1,9 @@
+pool:
+  vmImage: ubuntu-latest
+container: mcr.microsoft.com/dotnet/sdk:6.0
+steps:
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: test
+      projects: '**/*.csproj'
+      arguments: --logger="console;verbosity=detailed"
