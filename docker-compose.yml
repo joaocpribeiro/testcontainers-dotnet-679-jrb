@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}issuetests
     build:
       context: .
-      dockerfile: Issue.Tests\Dockerfile
+      dockerfile: Issue.Tests/Dockerfile
     environment:
       - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
     volumes:
