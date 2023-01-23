@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  issue.tests:
+    image: ${DOCKER_REGISTRY-}issuetests
+    build:
+      context: .
+      dockerfile: Issue.Tests\Dockerfile
+    environment:
+      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+

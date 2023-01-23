@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,6 +9,7 @@ public sealed class GitHub : IAsyncLifetime
     private readonly IDockerContainer _container = new TestcontainersBuilder<TestcontainersContainer>()
         .WithImage("alpine")
         .WithEntrypoint("top")
+        //.WithDockerEndpoint("unix:///var/run/docker.sock")
         .Build();
 
     private readonly ITestOutputHelper _testOutputHelper;

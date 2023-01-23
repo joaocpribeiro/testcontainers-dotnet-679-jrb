@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Issue.Tests": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
