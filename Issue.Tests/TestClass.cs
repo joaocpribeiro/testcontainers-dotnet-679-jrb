@@ -24,6 +24,7 @@ namespace Issue.Tests
             .WithEnvironment("MSSQL_SA_PASSWORD", Password)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilCommandIsCompleted("/opt/mssql-tools/bin/sqlcmd", "-S", $"localhost,{MssqlContainerPort}", "-U", Username, "-P", Password))
             //.WithDockerEndpoint("http://host.docker.internal")
+            //.WithDockerEndpoint("http://192.168.65.2")
             .Build();
 
         public Task InitializeAsync()
