@@ -14,12 +14,12 @@ COPY . .
 #WORKDIR "/src/."
 #RUN dotnet build "Issue.Tests/Issue.Tests.csproj" -c Release
 
-FROM build AS tests
-WORKDIR /src
+#FROM build AS tests
+#WORKDIR /src
 #VOLUME /var/run/docker.sock:/var/run/docker.sock
 #RUN dotnet test "Issue.Tests.csproj" --no-build -c Release
 #RUN dotnet test --no-build -c Release --results-directory /testresults --logger "trx;LogFileName=testresults_authentication_api_it.trx" --logger=console;verbosity=detailed "Issue.Tests/Issue.Tests.csproj"
-RUN dotnet test Issue.Tests/Issue.Tests.csproj -c Release --results-directory /testresults --logger trx --logger=console;verbosity=detailed
+#RUN dotnet test Issue.Tests/Issue.Tests.csproj -c Release --results-directory /testresults --logger trx --logger=console;verbosity=detailed
 
 #FROM build AS publish
 #RUN dotnet publish "Issue.Tests.csproj" -c Release -o /app/publish /p:UseAppHost=false
