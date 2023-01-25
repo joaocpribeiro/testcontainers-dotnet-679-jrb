@@ -12,5 +12,5 @@ services:
     #  - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    extra_hosts:
-      - "host.docker.internal:192.168.65.2"
+    #extra_hosts:
+    #  - "host.docker.internal:192.168.65.2"
