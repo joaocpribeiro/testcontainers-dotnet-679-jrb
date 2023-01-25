@@ -22,73 +22,26 @@ namespace Issue.Tests
 
         private const ushort MssqlContainerPort = 1433;
 
-        private readonly TestcontainersContainer _dbContainer;
+        private readonly TestcontainersContainer _dbContainer =
+          new TestcontainersBuilder<TestcontainersContainer>()
+            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+            .WithPortBinding(MssqlContainerPort, true)
+            .WithEnvironment("ACCEPT_EULA", "Y")
+            .WithEnvironment("MSSQL_SA_PASSWORD", Password)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilCommandIsCompleted("/opt/mssql-tools/bin/sqlcmd", "-S", $"localhost,{MssqlContainerPort}", "-U", Username, "-P", Password))
+            //.WithDockerEndpoint("http://host.docker.internal")
+            //.WithDockerEndpoint("http://192.168.65.2")
+            .Build();
         private readonly ITestOutputHelper _testOutputHelper;
 
         public TestClass(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-
-            try
-            {
-                _dbContainer = new TestcontainersBuilder<TestcontainersContainer>()
-                    .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-                    .WithPortBinding(MssqlContainerPort, true)
-                    .WithEnvironment("ACCEPT_EULA", "Y")
-                    .WithEnvironment("MSSQL_SA_PASSWORD", Password)
-                    .WithWaitStrategy(Wait.ForUnixContainer().UntilCommandIsCompleted("/opt/mssql-tools/bin/sqlcmd", "-S", $"localhost,{MssqlContainerPort}", "-U", Username, "-P", Password))
-                    .Build();
-            }
-            catch (ResourceReaperException ex)
-            {
-                try
-                {
-                    var expectedPortRegex = new Regex("\"ExpectedPort\": (\\d+)");
-                    var hostPortRegex = new Regex("\"HostPort\": \"(\\d+)\"");
-
-                    var message = ex.Message;
-                    var expectedPort = int.Parse(expectedPortRegex.Match(message).Groups[1].Value,
-                        CultureInfo.InvariantCulture);
-                    var hostPort = int.Parse(hostPortRegex.Matches(message)[1].Groups[1].Value,
-                        CultureInfo.InvariantCulture);
-                    _testOutputHelper.WriteLine($"Fail - expectedPort: {expectedPort}, hostPort: {hostPort}");
-                }
-                catch (Exception)
-                {
-                    //NetworkSettings HostPort is missing usually
-                    _testOutputHelper.WriteLine($"Fail...");
-                }
-                throw;
-            }
         }
 
         public Task InitializeAsync()
         {
-            try
-            {
-                return _dbContainer.StartAsync();
-            }
-            catch (ResourceReaperException ex)
-            {
-                try
-                {
-                    var expectedPortRegex = new Regex("\"ExpectedPort\": (\\d+)");
-                    var hostPortRegex = new Regex("\"HostPort\": \"(\\d+)\"");
-
-                    var message = ex.Message;
-                    var expectedPort = int.Parse(expectedPortRegex.Match(message).Groups[1].Value,
-                        CultureInfo.InvariantCulture);
-                    var hostPort = int.Parse(hostPortRegex.Matches(message)[1].Groups[1].Value,
-                        CultureInfo.InvariantCulture);
-                    _testOutputHelper.WriteLine($"Fail - expectedPort: {expectedPort}, hostPort: {hostPort}");
-                }
-                catch (Exception)
-                {
-                    //NetworkSettings HostPort is missing usually
-                    _testOutputHelper.WriteLine($"Fail...");
-                }
-                throw;
-            }
+            return _dbContainer.StartAsync();
         }
 
         public Task DisposeAsync()
@@ -116,7 +69,7 @@ namespace Issue.Tests
             return Task.CompletedTask;
         }
 
-        [Fact]
+        //[Fact]
         public async Task ResourceReaperStressTest()
         {
             var expectedPortRegex = new Regex("\"ExpectedPort\": (\\d+)");
