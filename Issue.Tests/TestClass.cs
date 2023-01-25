@@ -41,7 +41,31 @@ namespace Issue.Tests
 
         public Task InitializeAsync()
         {
-            return _dbContainer.StartAsync();
+            try
+            {
+                return _dbContainer.StartAsync();
+            }
+            catch (ResourceReaperException ex)
+            {
+                try
+                {
+                    var expectedPortRegex = new Regex("\"ExpectedPort\": (\\d+)");
+                    var hostPortRegex = new Regex("\"HostPort\": \"(\\d+)\"");
+
+                    var message = ex.Message;
+                    var expectedPort = int.Parse(expectedPortRegex.Match(message).Groups[1].Value,
+                        CultureInfo.InvariantCulture);
+                    var hostPort = int.Parse(hostPortRegex.Matches(message)[1].Groups[1].Value,
+                        CultureInfo.InvariantCulture);
+                    _testOutputHelper.WriteLine($"Fail - expectedPort: {expectedPort}, hostPort: {hostPort}");
+                }
+                catch (Exception)
+                {
+                    //NetworkSettings HostPort is missing usually
+                    _testOutputHelper.WriteLine($"Fail...");
+                }
+                throw;
+            }
         }
 
         public Task DisposeAsync()
