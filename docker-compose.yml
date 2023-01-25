@@ -1,42 +1,16 @@
 version: "3"
-# test with '3.4'
+# TODO: test with '3.4'
 
 services:
   issue.tests: # C:\Projects\Playground\testcontainers-dotnet-679>docker compose -p docker-compose.yml up issue.tests
-    #image: ${DOCKER_REGISTRY-}issuetests
     build:
       context: .
       dockerfile: Issue.Tests/Dockerfile
     entrypoint: dotnet
     command: test Issue.Tests/Issue.Tests.csproj
-    environment:
-      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
+    #environment:
+    #  - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     extra_hosts:
       - "host.docker.internal:192.168.65.2"
-
-#  docker_compose_test0:
-#    image: ${DOCKER_REGISTRY-}issuetests2
-#    build:
-#      dockerfile: Issue.Tests/Dockerfile
-#      context: .
-#    entrypoint: dotnet
-#    command: test
-#    environment:
-#      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-
-##version: "3"
-##services:
-  #docker_compose_test1: # docker compose -p docker-compose.yml up docker_compose_test1 # if it is not working, remove all related images.
-  #  build:
-  #    dockerfile: Issue.Tests/Dockerfile
-  #    context: .
-  #  entrypoint: dotnet test
-  #  command: Issue.Tests/Issue.Tests.csproj
-  #  environment:
-  #    - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
-  #  volumes:
-  #    - /var/run/docker.sock:/var/run/docker.sock

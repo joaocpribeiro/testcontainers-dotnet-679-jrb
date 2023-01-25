@@ -1,0 +1,6 @@
+version: '3.4'
+
+services:
+  issue.tests:
+    environment:
+      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
