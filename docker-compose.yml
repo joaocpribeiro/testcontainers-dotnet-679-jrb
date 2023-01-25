@@ -2,7 +2,7 @@ version: "3"
 # test with '3.4'
 
 services:
-  issue.tests: # C:\Projects\Playground\testcontainers-dotnet-679>docker compose -p docker-compose.yml up docker_compose_test -> wrong!
+  issue.tests: # C:\Projects\Playground\testcontainers-dotnet-679>docker compose -p docker-compose.yml up issue.tests
     #image: ${DOCKER_REGISTRY-}issuetests
     build:
       context: .
